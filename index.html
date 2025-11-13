@@ -945,7 +945,6 @@
                 postLengthInfo: document.getElementById("postLengthInfo"),
                 postTitle: document.getElementById("postTitle"),
                 postShort: document.getElementById("postShort"),
-                postTags: document.getElementById("postTags"),
                 postContent: document.getElementById("postContent"),
                 copyHtmlBtn: document.getElementById("copyHtmlBtn"),
                 copyPlainBtn: document.getElementById("copyPlainBtn"),
@@ -1185,8 +1184,7 @@
                 elements.postShort.textContent = "";
                 elements.postShort.style.display = "none";
 
-                // Теги в интерфейсе не показываем, только используем при копировании
-                elements.postTags.innerHTML = "";
+                // Теги в интерфейсе не показываем, только используем при копировании (элемент не используется)
 
                 const content = post.content || "";
                 elements.postContent.textContent = content;
