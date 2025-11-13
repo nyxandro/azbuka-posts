@@ -47,18 +47,24 @@
             }
 
             body {
-                display: flex;
-                align-items: stretch;
-                justify-content: center;
+                margin: 0;
                 padding: 20px;
                 font-size: 14px;
+                background: radial-gradient(
+                    circle at top,
+                    #111827 0%,
+                    #020817 42%,
+                    #000 100%
+                );
+                color: var(--text);
+                font-family: var(--font-ui);
             }
 
             .app {
                 display: flex;
                 flex-direction: column;
                 width: min(1440px, 100%);
-                height: calc(100vh - 40px);
+                max-height: calc(100vh - 40px);
                 border-radius: 26px;
                 padding: 18px 18px 16px;
                 background:
@@ -174,6 +180,7 @@
                 flex-direction: column;
                 gap: 8px;
                 padding: 10px;
+                min-height: 0;
                 border-radius: var(--radius-xl);
                 background: radial-gradient(
                     circle at top,
@@ -298,7 +305,7 @@
             .post-list {
                 margin: 4px 0 0;
                 padding: 4px;
-                flex: 1;
+                flex: 1 1 auto;
                 border-radius: 14px;
                 background: radial-gradient(
                     circle at top,
@@ -410,6 +417,7 @@
                 display: flex;
                 flex-direction: column;
                 padding: 10px;
+                min-height: 0;
                 border-radius: var(--radius-xl);
                 background: radial-gradient(
                     circle at top,
@@ -558,7 +566,7 @@
             .content-body-wrap {
                 margin-top: 4px;
                 position: relative;
-                flex: 1;
+                flex: 1 1 auto;
                 display: flex;
                 flex-direction: column;
                 border-radius: 16px;
@@ -580,7 +588,7 @@
                 white-space: pre-wrap;
                 color: var(--text);
                 overflow-y: auto;
-                flex: 1;
+                flex: 1 1 auto;
                 scrollbar-width: thin;
                 scrollbar-color: rgba(75, 85, 99, 0.9) transparent;
             }
@@ -620,8 +628,14 @@
                     grid-template-rows: auto auto;
                 }
                 .app {
-                    height: auto;
+                    max-height: none;
                     min-height: 100vh;
+                }
+                .content {
+                    min-height: 0;
+                }
+                .content-body-wrap {
+                    flex: 1 1 auto;
                 }
                 .content-body {
                     max-height: 45vh;
@@ -634,6 +648,7 @@
                     border-radius: 0;
                     border: none;
                     box-shadow: none;
+                    max-height: none;
                 }
 
                 .app-header {
