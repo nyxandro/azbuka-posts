@@ -884,42 +884,48 @@
 
                     <div class="content-toolbar">
                         <button
-                            id="copyHtmlBtn"
+                            id="viewRawBtn"
+                            class="copy-btn"
+                            type="button"
+                            disabled
+                        >
+                            <span class="icon">👁</span>
+                            <span>Текст</span>
+                        </button>
+                        <button
+                            id="viewFormattedBtn"
+                            class="copy-btn"
+                            type="button"
+                            disabled
+                        >
+                            <span class="icon">✨</span>
+                            <span>Текст с форматированием</span>
+                        </button>
+                        <button
+                            id="viewFormattedTagsBtn"
+                            class="copy-btn"
+                            type="button"
+                            disabled
+                        >
+                            <span class="icon">#</span>
+                            <span>Текст + теги</span>
+                        </button>
+                        <button
+                            id="copyCurrentViewBtn"
                             class="copy-btn"
                             type="button"
                             disabled
                         >
                             <span class="icon">⧉</span>
-                            <span>Копировать пост</span>
-                        </button>
-                        <button
-                            id="copyPlainBtn"
-                            class="copy-plain-btn"
-                            type="button"
-                            disabled
-                        >
-                            <span class="icon">⧉</span>
-                            <span>Копировать как есть</span>
+                            <span>Копировать</span>
                         </button>
                     </div>
 
                     <div class="content-body-wrap">
                         <div id="postContent" class="content-body"></div>
                         <div class="content-watermark">
-                            Generated from posts.json • локальная утилита
+                            Локальная библиотека постов
                         </div>
-                    </div>
-
-                    <div class="hint">
-                        • Источник данных: файл
-                        <code
-                            style="
-                                font-family: var(--font-mono);
-                                font-size: 8px;
-                            "
-                            >posts/posts.json</code
-                        >. Обновите JSON — и список постов обновится
-                        автоматически при следующей загрузке страницы.
                     </div>
                 </section>
             </main>
@@ -946,8 +952,12 @@
                 postTitle: document.getElementById("postTitle"),
                 postShort: document.getElementById("postShort"),
                 postContent: document.getElementById("postContent"),
-                copyHtmlBtn: document.getElementById("copyHtmlBtn"),
-                copyPlainBtn: document.getElementById("copyPlainBtn"),
+                viewRawBtn: document.getElementById("viewRawBtn"),
+                viewFormattedBtn: document.getElementById("viewFormattedBtn"),
+                viewFormattedTagsBtn: document.getElementById(
+                    "viewFormattedTagsBtn",
+                ),
+                copyBtn: document.getElementById("copyCurrentViewBtn"),
             };
 
             const ACCESS_KEY = "azbuka_posts_access";
@@ -1064,11 +1074,19 @@
             function bindEvents() {
                 elements.searchInput.addEventListener("input", onSearchChange);
                 elements.clearSearch.addEventListener("click", clearSearch);
-                elements.copyHtmlBtn.addEventListener("click", () =>
-                    copyCurrent("html"),
+
+                elements.viewRawBtn.addEventListener("click", () =>
+                    setViewMode("raw"),
                 );
-                elements.copyPlainBtn.addEventListener("click", () =>
-                    copyCurrent("plain"),
+                elements.viewFormattedBtn.addEventListener("click", () =>
+                    setViewMode("formatted"),
+                );
+                elements.viewFormattedTagsBtn.addEventListener("click", () =>
+                    setViewMode("formattedTags"),
+                );
+
+                elements.copyBtn.addEventListener("click", () =>
+                    copyCurrentView(),
                 );
             }
 
@@ -1197,9 +1215,11 @@
                 elements.postLengthInfo.textContent = `${length} символов`;
 
                 const hasContent = !!content;
-                elements.copyHtmlBtn.disabled = !hasContent;
-                elements.copyPlainBtn.disabled = !hasContent;
-                resetCopyButtons();
+                const disable = !hasContent;
+                elements.viewRawBtn.disabled = disable;
+                elements.viewFormattedBtn.disabled = disable;
+                elements.viewFormattedTagsBtn.disabled = disable;
+                elements.copyBtn.disabled = disable;
             }
 
             function clearActivePostView() {
@@ -1210,9 +1230,10 @@
                 elements.postContent.textContent = "";
                 elements.postIdInfo.textContent = "ID: —";
                 elements.postLengthInfo.textContent = "0 символов";
-                elements.copyHtmlBtn.disabled = true;
-                elements.copyPlainBtn.disabled = true;
-                resetCopyButtons();
+                elements.viewRawBtn.disabled = true;
+                elements.viewFormattedBtn.disabled = true;
+                elements.viewFormattedTagsBtn.disabled = true;
+                elements.copyBtn.disabled = true;
                 updateActiveStyles();
             }
 
@@ -1228,7 +1249,53 @@
                 });
             }
 
-            function copyCurrent(mode) {
+            // currentViewMode:
+            // "raw"            - только content как есть
+            // "formatted"      - заголовок + аккуратные абзацы, можно добавить emoji
+            // "formattedTags"  - formatted + хэштеги в конце
+            let currentViewMode = "raw";
+
+            function setViewMode(mode) {
+                currentViewMode = mode;
+                const post = state.posts.find((p) => p.id === state.activeId);
+                if (!post || !post.content) {
+                    elements.postContent.textContent = "";
+                    return;
+                }
+
+                const title = post.title || "";
+                const content = post.content || "";
+                const tags = (post.tags || []).filter(
+                    (t) => typeof t === "string" && t.trim().length > 0,
+                );
+
+                if (mode === "raw") {
+                    // Просто content
+                    elements.postContent.textContent = content;
+                    return;
+                }
+
+                // Форматированное представление: разбиваем по абзацам
+                const paragraphs = content
+                    .split(/\n{2,}/)
+                    .map((p) => p.trim())
+                    .filter(Boolean);
+
+                // Базовый текст с заголовком
+                let display = "";
+                if (title) {
+                    display += "📝 " + title + "\n\n";
+                }
+                display += paragraphs.join("\n\n");
+
+                if (mode === "formattedTags" && tags.length) {
+                    display += "\n\n" + tags.map((t) => "#" + t).join(" ");
+                }
+
+                elements.postContent.textContent = display;
+            }
+
+            function copyCurrentView() {
                 if (state.activeId === null || state.activeId === undefined)
                     return;
                 const post = state.posts.find((p) => p.id === state.activeId);
@@ -1242,32 +1309,27 @@
 
                 let textToCopy = "";
 
-                if (mode === "html") {
-                    // Структурированная версия: заголовок + текст (абзацы по двойному переводу строки) + теги в конце
+                if (currentViewMode === "raw") {
+                    // Только content
+                    textToCopy = content;
+                } else {
                     const paragraphs = content
                         .split(/\n{2,}/)
                         .map((p) => p.trim())
                         .filter(Boolean);
-                    if (title) textToCopy += title + "\n\n";
+
+                    if (title) {
+                        textToCopy += "📝 " + title + "\n\n";
+                    }
                     textToCopy += paragraphs.join("\n\n");
-                    if (tags.length) {
+
+                    if (currentViewMode === "formattedTags" && tags.length) {
                         textToCopy +=
                             "\n\n" + tags.map((t) => "#" + t).join(" ");
                     }
-                } else {
-                    // Plain text: как в JSON + теги в конце
-                    textToCopy = content || "";
-                    if (tags.length) {
-                        const sep = textToCopy ? "\n\n" : "";
-                        textToCopy += sep + tags.map((t) => "#" + t).join(" ");
-                    }
                 }
 
-                const targetBtn =
-                    mode === "html"
-                        ? elements.copyHtmlBtn
-                        : elements.copyPlainBtn;
-                doCopy(textToCopy, targetBtn);
+                doCopy(textToCopy, elements.copyBtn);
             }
 
             function doCopy(text, buttonEl) {
@@ -1317,27 +1379,10 @@
             }
 
             function resetCopyButtons() {
-                [elements.copyHtmlBtn, elements.copyPlainBtn].forEach((btn) => {
-                    if (!btn) return;
-                    btn.classList.remove("copied");
-                    if (!btn.disabled) {
-                        if (btn === elements.copyHtmlBtn) {
-                            btn.innerHTML =
-                                '<span class="icon">⧉</span><span>Копировать с форматированием</span>';
-                        } else {
-                            btn.innerHTML =
-                                '<span class="icon">⧉</span><span>Копировать как текст</span>';
-                        }
-                    } else {
-                        if (btn === elements.copyHtmlBtn) {
-                            btn.innerHTML =
-                                '<span class="icon">⧉</span><span>Копировать с форматированием</span>';
-                        } else {
-                            btn.innerHTML =
-                                '<span class="icon">⧉</span><span>Копировать как текст</span>';
-                        }
-                    }
-                });
+                if (!elements.copyBtn) return;
+                elements.copyBtn.classList.remove("copied");
+                elements.copyBtn.innerHTML =
+                    '<span class="icon">⧉</span><span>Копировать</span>';
             }
         </script>
     </body>
