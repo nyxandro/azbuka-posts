@@ -434,29 +434,9 @@
                 gap: 6px;
             }
 
-            .content-label {
-                font-size: 9px;
-                padding: 3px 8px;
-                border-radius: 999px;
-                border: 1px solid rgba(75, 85, 99, 0.9);
-                color: var(--accent);
-                background-color: rgba(9, 9, 11, 1);
-                display: inline-flex;
-                align-items: center;
-                gap: 6px;
-            }
-
-            .content-label span.dot {
-                width: 6px;
-                height: 6px;
-                border-radius: 999px;
-                background-color: #6366f1;
-                box-shadow: 0 0 8px rgba(99, 102, 241, 0.9);
-            }
-
             .content-info {
                 margin-left: auto;
-                font-size: 9px;
+                font-size: 14px;
                 color: var(--text-soft);
                 display: flex;
                 gap: 10px;
@@ -500,8 +480,7 @@
                 user-select: none;
             }
 
-            .copy-btn span.icon,
-            .copy-plain-btn span.icon {
+            .copy-btn span.icon {
                 width: 14px;
                 height: 14px;
                 border-radius: 6px;
@@ -522,8 +501,7 @@
                 background-color: rgba(6, 8, 16, 1);
             }
 
-            .copy-btn.copied,
-            .copy-plain-btn.copied {
+            .copy-btn.copied {
                 border-color: #22c55e;
                 color: #22c55e;
                 box-shadow: 0 0 18px rgba(34, 197, 94, 0.26);
@@ -874,10 +852,6 @@
 
                 <section class="content">
                     <div class="content-header">
-                        <div class="content-label">
-                            <span class="dot"></span>
-                            <span>Детали поста</span>
-                        </div>
                         <div class="content-info">
                             <div id="postIdInfo">ID: —</div>
                             <div id="postLengthInfo">0 символов</div>
@@ -936,9 +910,6 @@
 
                     <div class="content-body-wrap">
                         <div id="postContent" class="content-body"></div>
-                        <div class="content-watermark">
-                            Локальная библиотека постов
-                        </div>
                     </div>
                 </section>
             </main>
@@ -975,6 +946,9 @@
 
             const ACCESS_KEY = "azbuka_posts_access";
             const ACCESS_PASSWORD = "azbuka2024"; // СМЕНИ ПАРОЛЬ ЗДЕСЬ ПОД СЕБЯ
+
+            // По умолчанию показываем форматированный текст с тегами
+            let currentViewMode = "formattedTags";
 
             init();
 
@@ -1233,6 +1207,13 @@
                 elements.viewFormattedBtn.disabled = disable;
                 elements.viewFormattedTagsBtn.disabled = disable;
                 elements.copyBtn.disabled = disable;
+
+                // Обновляем отображение в соответствии с текущим режимом
+                if (hasContent) {
+                    setViewMode(currentViewMode);
+                } else {
+                    elements.postContent.textContent = "";
+                }
             }
 
             function clearActivePostView() {
@@ -1248,6 +1229,7 @@
                 elements.viewFormattedTagsBtn.disabled = true;
                 elements.copyBtn.disabled = true;
                 updateActiveStyles();
+                elements.postLengthInfo.textContent = "0 символов";
             }
 
             function updateActiveStyles() {
@@ -1264,9 +1246,8 @@
 
             // currentViewMode:
             // "raw"            - только content как есть
-            // "formatted"      - заголовок + аккуратные абзацы, можно добавить emoji
+            // "formatted"      - заголовок + аккуратные абзацы, с эмодзи
             // "formattedTags"  - formatted + хэштеги в конце
-            let currentViewMode = "raw";
 
             function setViewMode(mode) {
                 currentViewMode = mode;
@@ -1285,6 +1266,8 @@
                 if (mode === "raw") {
                     // Просто content
                     elements.postContent.textContent = content;
+                    updateLengthInfo(elements.postContent.textContent.length);
+                    updateViewButtons();
                     return;
                 }
 
@@ -1306,6 +1289,8 @@
                 }
 
                 elements.postContent.textContent = display;
+                updateLengthInfo(display.length);
+                updateViewButtons();
             }
 
             function copyCurrentView() {
@@ -1343,6 +1328,7 @@
                 }
 
                 doCopy(textToCopy, elements.copyBtn);
+                updateLengthInfo(textToCopy.length);
             }
 
             function doCopy(text, buttonEl) {
@@ -1396,6 +1382,29 @@
                 elements.copyBtn.classList.remove("copied");
                 elements.copyBtn.innerHTML =
                     '<span class="icon">⧉</span><span>Копировать</span>';
+            }
+
+            function updateLengthInfo(length) {
+                if (typeof length === "number" && !isNaN(length)) {
+                    elements.postLengthInfo.textContent = `${length} символов`;
+                }
+            }
+
+            function updateViewButtons() {
+                const modes = {
+                    raw: elements.viewRawBtn,
+                    formatted: elements.viewFormattedBtn,
+                    formattedTags: elements.viewFormattedTagsBtn,
+                };
+                Object.keys(modes).forEach((mode) => {
+                    const btn = modes[mode];
+                    if (!btn) return;
+                    if (mode === currentViewMode) {
+                        btn.classList.add("copied");
+                    } else {
+                        btn.classList.remove("copied");
+                    }
+                });
             }
         </script>
     </body>
