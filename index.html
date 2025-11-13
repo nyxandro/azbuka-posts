@@ -1080,12 +1080,10 @@
                 } else {
                     state.filtered = state.posts.filter((post) => {
                         const title = (post.title || "").toLowerCase();
-                        const short = (post.short || "").toLowerCase();
                         const tags = (post.tags || []).join(" ").toLowerCase();
                         const content = (post.content || "").toLowerCase();
                         return (
                             title.includes(q) ||
-                            short.includes(q) ||
                             tags.includes(q) ||
                             content.includes(q)
                         );
@@ -1145,24 +1143,8 @@
                         titleDiv.className = "post-title";
                         titleDiv.textContent = post.title || "Без заголовка";
 
-                        const shortDiv = document.createElement("div");
-                        shortDiv.className = "post-short";
-                        shortDiv.textContent = post.short || "";
-
-                        const tagsWrap = document.createElement("div");
-                        tagsWrap.className = "post-tags";
-                        (post.tags || []).forEach((t) => {
-                            const tagEl = document.createElement("div");
-                            tagEl.className = "post-tag";
-                            tagEl.textContent = t;
-                            tagsWrap.appendChild(tagEl);
-                        });
-
                         item.appendChild(idSpan);
                         item.appendChild(titleDiv);
-                        if (post.short) item.appendChild(shortDiv);
-                        if ((post.tags || []).length)
-                            item.appendChild(tagsWrap);
 
                         item.addEventListener("click", () =>
                             setActivePost(post.id),
@@ -1225,10 +1207,8 @@
             function clearActivePostView() {
                 state.activeId = null;
                 elements.postTitle.textContent = "Выберите пост слева";
-                elements.postShort.textContent =
-                    "Здесь появится полный текст поста, уже вычищенный и готовый к публикации.";
-                elements.postShort.style.display = "block";
-                elements.postTags.innerHTML = "";
+                elements.postShort.textContent = "";
+                elements.postShort.style.display = "none";
                 elements.postContent.textContent = "";
                 elements.postIdInfo.textContent = "ID: —";
                 elements.postLengthInfo.textContent = "0 символов";
