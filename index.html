@@ -51,6 +51,7 @@
                 align-items: stretch;
                 justify-content: center;
                 padding: 20px;
+                font-size: 14px;
             }
 
             .app {
@@ -130,8 +131,7 @@
             }
 
             .app-subtitle {
-                font-size: 12px;
-                color: var(--text-soft);
+                display: none;
             }
 
             .app-actions {
@@ -144,14 +144,7 @@
             }
 
             .pill {
-                padding: 4px 9px;
-                border-radius: 999px;
-                border: 1px solid rgba(75, 85, 99, 0.9);
-                background-color: rgba(9, 9, 11, 0.98);
-                display: inline-flex;
-                align-items: center;
-                gap: 6px;
-                color: var(--text-soft);
+                display: none;
             }
 
             .pill span.icon {
@@ -225,13 +218,13 @@
             }
 
             .sidebar-title {
-                font-size: 14px;
+                font-size: 16px;
                 font-weight: 500;
                 color: #e5e7eb;
             }
 
             .sidebar-note {
-                font-size: 11px;
+                font-size: 14px;
                 color: var(--text-soft);
             }
 
@@ -254,7 +247,7 @@
                 border: 1px solid rgba(75, 85, 99, 0.9);
                 background-color: rgba(9, 9, 11, 1);
                 color: var(--text);
-                font-size: 11px;
+                font-size: 14px;
                 outline: none;
                 transition:
                     border-color var(--transition-fast),
@@ -284,7 +277,7 @@
             .sidebar-clear-btn {
                 padding: 5px 8px;
                 border-radius: 999px;
-                font-size: 10px;
+                font-size: 14px;
                 border: 1px solid rgba(75, 85, 99, 0.9);
                 background-color: rgba(9, 9, 11, 1);
                 color: var(--text-soft);
@@ -333,9 +326,9 @@
             }
 
             .post-item {
-                padding: 8px 9px;
+                padding: 9px 10px;
                 border-radius: 11px;
-                margin-bottom: 3px;
+                margin-bottom: 4px;
                 cursor: pointer;
                 display: flex;
                 flex-direction: column;
@@ -372,19 +365,19 @@
             }
 
             .post-id {
-                font-size: 10px;
+                font-size: 14px;
                 color: var(--accent);
                 opacity: 0.96;
             }
 
             .post-title {
-                font-size: 12px;
+                font-size: 14px;
                 font-weight: 500;
                 color: #e5e7eb;
             }
 
             .post-short {
-                font-size: 10px;
+                font-size: 14px;
                 color: var(--text-soft);
                 line-height: 1.5;
             }
@@ -407,7 +400,7 @@
 
             .no-results {
                 padding: 8px;
-                font-size: 10px;
+                font-size: 14px;
                 color: var(--text-soft);
             }
 
@@ -466,14 +459,14 @@
 
             .content-title {
                 margin-top: 2px;
-                font-size: 17px;
+                font-size: 20px;
                 font-weight: 500;
                 color: #e5e7eb;
             }
 
             .content-short {
-                margin-top: 3px;
-                font-size: 11px;
+                margin-top: 4px;
+                font-size: 14px;
                 color: var(--text-soft);
             }
 
@@ -488,7 +481,7 @@
 
             .copy-btn,
             .copy-plain-btn {
-                padding: 6px 10px;
+                padding: 7px 11px;
                 border-radius: 999px;
                 border: 1px solid rgba(75, 85, 99, 0.9);
                 background-color: rgba(9, 9, 11, 1);
@@ -510,7 +503,7 @@
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 9px;
+                font-size: 14px;
                 color: var(--accent);
             }
 
@@ -550,7 +543,7 @@
                 display: flex;
                 flex-wrap: wrap;
                 gap: 4px;
-                font-size: 9px;
+                font-size: 14px;
                 margin-left: 2px;
             }
 
@@ -581,8 +574,8 @@
             }
 
             .content-body {
-                padding: 11px 11px 10px;
-                font-size: 13px;
+                padding: 12px 12px 11px;
+                font-size: 14px;
                 line-height: 1.7;
                 white-space: pre-wrap;
                 color: var(--text);
@@ -615,8 +608,8 @@
             }
 
             .hint {
-                margin-top: 3px;
-                font-size: 9px;
+                margin-top: 4px;
+                font-size: 14px;
                 color: var(--text-soft);
                 opacity: 0.9;
             }
@@ -732,10 +725,10 @@
                         A
                     </div>
                     <div>
-                        <div style="font-size: 14px; font-weight: 600">
+                        <div style="font-size: 16px; font-weight: 600">
                             Доступ к библиотеке постов
                         </div>
-                        <div style="font-size: 10px; color: #9ca3af">
+                        <div style="font-size: 14px; color: #9ca3af">
                             Введите пароль, чтобы просматривать и копировать
                             материалы.
                         </div>
@@ -759,12 +752,12 @@
                         placeholder="Введите пароль"
                         style="
                             width: 100%;
-                            padding: 7px 9px;
+                            padding: 8px 10px;
                             border-radius: 9px;
                             border: 1px solid rgba(75, 85, 99, 0.95);
                             background-color: rgba(9, 9, 11, 1);
                             color: #e5e7eb;
-                            font-size: 10px;
+                            font-size: 14px;
                             outline: none;
                             box-sizing: border-box;
                         "
@@ -782,7 +775,7 @@
                         id="accessSubmit"
                         type="button"
                         style="
-                            padding: 6px 11px;
+                            padding: 7px 12px;
                             border-radius: 999px;
                             border: 1px solid rgba(56, 189, 248, 0.9);
                             background: linear-gradient(
@@ -807,7 +800,7 @@
                         Неверный пароль.
                     </div>
                 </div>
-                <div style="margin-top: 6px; font-size: 8px; color: #6b7280">
+                <div style="margin-top: 6px; font-size: 12px; color: #6b7280">
                     Доступ ограничен для внутреннего использования. Не
                     передавайте ссылку и пароль посторонним.
                 </div>
@@ -818,21 +811,7 @@
             <header class="app-header">
                 <div class="brand-badge">A</div>
                 <div class="app-title-wrap">
-                    <div class="app-title">Посты «Азбука Цифра»</div>
-                    <div class="app-subtitle">
-                        Просмотр, выбор и копирование подготовленных постов из
-                        JSON
-                    </div>
-                </div>
-                <div class="app-actions">
-                    <div class="pill">
-                        <span class="icon">★</span>
-                        <span>JSON only</span>
-                    </div>
-                    <div class="pill">
-                        <span class="icon">↻</span>
-                        <span>Live copy-ready контент</span>
-                    </div>
+                    <div class="app-title">Библиотека постов</div>
                 </div>
             </header>
 
@@ -895,9 +874,12 @@
                     <h1 id="postTitle" class="content-title">
                         Выберите пост слева
                     </h1>
-                    <div id="postShort" class="content-short">
-                        Здесь появится полный текст поста, уже вычищенный и
-                        готовый к публикации.
+                    <div
+                        id="postShort"
+                        class="content-short"
+                        style="display: none"
+                    >
+                        <!-- short скрыт и не используется -->
                     </div>
 
                     <div class="content-toolbar">
@@ -908,7 +890,7 @@
                             disabled
                         >
                             <span class="icon">⧉</span>
-                            <span>Копировать с форматированием</span>
+                            <span>Копировать пост</span>
                         </button>
                         <button
                             id="copyPlainBtn"
@@ -917,12 +899,8 @@
                             disabled
                         >
                             <span class="icon">⧉</span>
-                            <span>Копировать как текст</span>
+                            <span>Копировать как есть</span>
                         </button>
-                        <div class="content-meta-pill">
-                            <span>Теги:</span>
-                            <div id="postTags" class="content-tags"></div>
-                        </div>
                     </div>
 
                     <div class="content-body-wrap">
@@ -1147,7 +1125,7 @@
                         if (a.id == null && b.id == null) return 0;
                         if (a.id == null) return 1;
                         if (b.id == null) return -1;
-                        return b.id - a.id; // по убыванию ID
+                        return a.id - b.id; // по возрастанию ID
                     })
                     .forEach((post) => {
                         const item = document.createElement("div");
@@ -1203,7 +1181,7 @@
                     if (a.id == null && b.id == null) return 0;
                     if (a.id == null) return 1;
                     if (b.id == null) return -1;
-                    return b.id - a.id;
+                    return a.id - b.id;
                 });
                 const first = sorted[0];
                 if (first) {
@@ -1221,19 +1199,12 @@
                 }
 
                 elements.postTitle.textContent = post.title || "Без заголовка";
-                elements.postShort.textContent = post.short || "";
-                elements.postShort.style.display = post.short
-                    ? "block"
-                    : "none";
+                // short больше не используется, скрываем
+                elements.postShort.textContent = "";
+                elements.postShort.style.display = "none";
 
-                // Теги
+                // Теги в интерфейсе не показываем, только используем при копировании
                 elements.postTags.innerHTML = "";
-                (post.tags || []).forEach((t) => {
-                    const el = document.createElement("div");
-                    el.className = "content-tag";
-                    el.textContent = t;
-                    elements.postTags.appendChild(el);
-                });
 
                 const content = post.content || "";
                 elements.postContent.textContent = content;
@@ -1286,23 +1257,32 @@
                 if (!post || !post.content) return;
 
                 const title = post.title || "";
-                const short = post.short || "";
                 const content = post.content || "";
+                const tags = (post.tags || []).filter(
+                    (t) => typeof t === "string" && t.trim().length > 0,
+                );
 
                 let textToCopy = "";
 
                 if (mode === "html") {
-                    // Структурированная версия: заголовок, подзаголовок, текст (абзацы по двойному переводу строки)
+                    // Структурированная версия: заголовок + текст (абзацы по двойному переводу строки) + теги в конце
                     const paragraphs = content
                         .split(/\n{2,}/)
                         .map((p) => p.trim())
                         .filter(Boolean);
                     if (title) textToCopy += title + "\n\n";
-                    if (short) textToCopy += short + "\n\n";
                     textToCopy += paragraphs.join("\n\n");
+                    if (tags.length) {
+                        textToCopy +=
+                            "\n\n" + tags.map((t) => "#" + t).join(" ");
+                    }
                 } else {
-                    // Plain text: как в JSON
-                    textToCopy = content;
+                    // Plain text: как в JSON + теги в конце
+                    textToCopy = content || "";
+                    if (tags.length) {
+                        const sep = textToCopy ? "\n\n" : "";
+                        textToCopy += sep + tags.map((t) => "#" + t).join(" ");
+                    }
                 }
 
                 const targetBtn =
