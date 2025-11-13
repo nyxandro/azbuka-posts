@@ -48,7 +48,7 @@
 
             body {
                 margin: 0;
-                padding: 20px;
+                padding: 0;
                 font-size: 14px;
                 background: radial-gradient(
                     circle at top,
@@ -369,6 +369,17 @@
                 box-shadow: 0 10px 26px rgba(15, 23, 42, 0.95);
             }
 
+            .post-item.used {
+                border-color: #22c55e;
+                background:
+                    radial-gradient(
+                        circle at top left,
+                        rgba(34, 197, 94, 0.14),
+                        transparent
+                    ),
+                    rgba(2, 6, 23, 1);
+            }
+
             .post-id {
                 font-size: 14px;
                 color: var(--accent);
@@ -615,6 +626,10 @@
                 }
                 .content-body {
                     max-height: 45vh;
+                }
+                .content-info {
+                    margin-left: 0;
+                    justify-content: flex-start;
                 }
             }
 
@@ -871,13 +886,13 @@
 
                     <div class="content-toolbar">
                         <button
-                            id="viewRawBtn"
+                            id="viewFormattedTagsBtn"
                             class="copy-btn"
                             type="button"
                             disabled
                         >
-                            <span class="icon">👁</span>
-                            <span>Текст</span>
+                            <span class="icon">#</span>
+                            <span>Текст + теги</span>
                         </button>
                         <button
                             id="viewFormattedBtn"
@@ -889,13 +904,13 @@
                             <span>Текст с форматированием</span>
                         </button>
                         <button
-                            id="viewFormattedTagsBtn"
+                            id="viewRawBtn"
                             class="copy-btn"
                             type="button"
                             disabled
                         >
-                            <span class="icon">#</span>
-                            <span>Текст + теги</span>
+                            <span class="icon">👁</span>
+                            <span>Текст</span>
                         </button>
                         <button
                             id="copyCurrentViewBtn"
@@ -905,6 +920,15 @@
                         >
                             <span class="icon">⧉</span>
                             <span>Копировать</span>
+                        </button>
+                        <button
+                            id="useCurrentPostBtn"
+                            class="copy-btn"
+                            type="button"
+                            disabled
+                        >
+                            <span class="icon">✔</span>
+                            <span>Использовать</span>
                         </button>
                     </div>
 
@@ -942,6 +966,7 @@
                     "viewFormattedTagsBtn",
                 ),
                 copyBtn: document.getElementById("copyCurrentViewBtn"),
+                useBtn: document.getElementById("useCurrentPostBtn"),
             };
 
             const ACCESS_KEY = "azbuka_posts_access";
@@ -1075,6 +1100,9 @@
                 elements.copyBtn.addEventListener("click", () =>
                     copyCurrentView(),
                 );
+                elements.useBtn.addEventListener("click", () =>
+                    markCurrentPostUsed(),
+                );
             }
 
             function onSearchChange() {
@@ -1131,9 +1159,11 @@
                     })
                     .forEach((post) => {
                         const item = document.createElement("div");
+                        const isUsed = !!post.used;
                         item.className =
                             "post-item" +
-                            (post.id === state.activeId ? " active" : "");
+                            (post.id === state.activeId ? " active" : "") +
+                            (isUsed ? " used" : "");
                         item.dataset.id = post.id;
 
                         const idSpan = document.createElement("div");
@@ -1164,6 +1194,10 @@
                     return;
                 }
                 const sorted = state.filtered.slice().sort((a, b) => {
+                    const aUsed = !!a.used;
+                    const bUsed = !!b.used;
+                    if (aUsed && !bUsed) return 1;
+                    if (!aUsed && bUsed) return -1;
                     if (a.id == null && b.id == null) return 0;
                     if (a.id == null) return 1;
                     if (b.id == null) return -1;
@@ -1207,6 +1241,7 @@
                 elements.viewFormattedBtn.disabled = disable;
                 elements.viewFormattedTagsBtn.disabled = disable;
                 elements.copyBtn.disabled = disable;
+                elements.useBtn.disabled = disable;
 
                 // Обновляем отображение в соответствии с текущим режимом
                 if (hasContent) {
@@ -1228,6 +1263,7 @@
                 elements.viewFormattedBtn.disabled = true;
                 elements.viewFormattedTagsBtn.disabled = true;
                 elements.copyBtn.disabled = true;
+                elements.useBtn.disabled = true;
                 updateActiveStyles();
                 elements.postLengthInfo.textContent = "0 символов";
             }
@@ -1392,9 +1428,9 @@
 
             function updateViewButtons() {
                 const modes = {
-                    raw: elements.viewRawBtn,
-                    formatted: elements.viewFormattedBtn,
                     formattedTags: elements.viewFormattedTagsBtn,
+                    formatted: elements.viewFormattedBtn,
+                    raw: elements.viewRawBtn,
                 };
                 Object.keys(modes).forEach((mode) => {
                     const btn = modes[mode];
@@ -1405,6 +1441,20 @@
                         btn.classList.remove("copied");
                     }
                 });
+            }
+
+            function markCurrentPostUsed() {
+                if (state.activeId === null || state.activeId === undefined)
+                    return;
+                const post = state.posts.find((p) => p.id === state.activeId);
+                if (!post) return;
+
+                // помечаем пост как использованный только в runtime
+                post.used = true;
+
+                // пересортировать список и обновить подсветку
+                renderList();
+                setActivePost(post.id);
             }
         </script>
     </body>
